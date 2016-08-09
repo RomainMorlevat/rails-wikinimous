@@ -1,6 +1,6 @@
 class ArticlesController < ApplicationController
   def index
-    @articles = Article.all
+    @articles = Article.all.reverse
   end
 
   def show
@@ -13,9 +13,11 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new(article_params)
-    @article.save
-
-    redirect_to article_path(@article)
+    if @article.save
+      redirect_to article_path(@article)
+    else
+      render :new
+    end
   end
 
   def edit
@@ -24,9 +26,11 @@ class ArticlesController < ApplicationController
 
   def update
     @article = Article.find(params[:id])
-    @article.update(article_params)
-
-    redirect_to article_path(@article)
+    if @article.update(article_params)
+      redirect_to article_path(@article)
+    else
+      render :edit
+    end
   end
 
   def destroy
